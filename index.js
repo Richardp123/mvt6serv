@@ -30,6 +30,22 @@ io.on("connection", function(socket){
   socket.on("disconnect", function(){
     console.log("user has disconnected");
   });
+
+  socket.on("joinroom", function(data){
+    socket.emit("yourid", socket.id);
+
+    
+
+
+
+  });
+
+  // socket.on("yourid", function(){
+  //
+  // });
+
+
+
 });
 
 server.listen(port, (err)=>{
