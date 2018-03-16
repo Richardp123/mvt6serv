@@ -8,7 +8,9 @@ var port = process.env.PORT || 3000;
 var io = require("socket.io")(server);
 
 var usernames = [];
-var msgs = [];
+
+
+
 
 io.on("connection", function(socket){
   console.log("user is connected success");
@@ -28,21 +30,32 @@ io.on("connection", function(socket){
   });
 
   socket.on("disconnect", function(){
-    console.log("user has disconnected");
-  });
+        console.log("user is disconnected");
+    });
+
 
   socket.on("joinroom", function(data){
-    socket.emit("yourid", socket.id);
-
-    
+		socket.emit("yourid", socket.id);
 
 
 
+
+	});
+
+  //
+
+
+
+  socket.on("disconnect", function(){
+    var index = allusers.indexOf(socket.id);
+    allusers.splice(index, 1);
+    io.emit("createimage", allusers);
   });
 
-  // socket.on("yourid", function(){
-  //
-  // });
+
+  socket.on("mymove", function(data){
+    socket.to(this.myRoom).emit("usermove", data);
+  });
 
 
 
