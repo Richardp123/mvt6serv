@@ -10,6 +10,7 @@ var allusers = {};
 var allstickers = {};
 
 var score = 0;
+var curMap = "";
 
 io.on("connection", function(socket) {
   console.log("User is connected");
@@ -30,6 +31,12 @@ socket.on("shots", function(data) {
           score = data;
             console.log(score)
           io.to(this.myRoom).emit("gunShots", score);
+          });
+    
+    socket.on("mapChange", function(data) {
+          curMap = data;
+            console.log(curMap)
+          io.to(this.myRoom).emit("currentMap", curMap);
           });
 
   socket.on("stick", function(data) {
