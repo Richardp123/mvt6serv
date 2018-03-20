@@ -9,6 +9,8 @@ var msgs = [];
 var allusers = {};
 var allstickers = {};
 
+var score = 0;
+
 io.on("connection", function(socket) {
   console.log("User is connected");
 
@@ -23,6 +25,12 @@ io.on("connection", function(socket) {
     msgs.push(data);
     io.emit('msgsent', msgs);  
   });
+    
+socket.on("shots", function(data) {
+          score = data;
+            console.log(score)
+          io.to(this.myRoom).emit("gunShots", score);
+          });
 
   socket.on("stick", function(data) {
     allstickers[this.myRoom].push(data);
