@@ -9,39 +9,37 @@ var msgs = [];
 var allusers = {};
 var allstickers = {};
 
-io.on("connection", function(socket){
-  console.log("user is connected");
+io.on("connection", function(socket) {
+  console.log("User is connected");
 
-  socket.on("username", function(data){
-    console.log("user is giving username:"+data);
+  socket.on("username", function(data) {
+    console.log("Username entered:", data);
     usernames.push(data);    
-    io.emit("usersjoined", usernames);
-  });
+    io.emit("usersjoined", usernames);  
+  });
 
-  socket.on("sendChat", function(data){
-    console.log("user sent a msg for chat");
+  socket.on("sendChat", function(data) {  
+    console.log("Message sent");
     msgs.push(data);
-    io.emit('msgsent', msgs);
-  });
+    io.emit('msgsent', msgs);  
+  });
 
-  socket.on("stick", function(data){
+  socket.on("stick", function(data) {
     allstickers[this.myRoom].push(data);
-    console.log("after allstickers[this.myRoom].push(data)");
     io.to(this.myRoom).emit("newsticker", allstickers[this.myRoom]);
   });
 
-  socket.on("joinroom", function(data){
-    // console.log(data);
+  socket.on("joinroom", function(data) {
     socket.join(data);
 
     socket.myRoom = data;
     socket.emit("yourid", socket.id);
 
-    if(!allusers[data]){
+    if (!allusers[data]) {
       allusers[data] = [];
     }
 
-    if(!allstickers[data]){
+    if (!allstickers[data]) {
       allstickers[data] = [];
     }
 
@@ -50,21 +48,21 @@ io.on("connection", function(socket){
     io.to(data).emit("newsticker", allstickers[data]);
   });
 
-  socket.on("mymove", function(data){
+  socket.on("mymove", function(data) {
     socket.to(this.myRoom).emit("newmove", data);
   });
 
-  socket.on("disconnect", function(){
-    if(this.myRoom){
+  socket.on("disconnect", function() {
+    if (this.myRoom) {
       var index = allusers[this.myRoom].indexOf(socket.id);
-      allusers[this.myRoom].splice(index,1);
+      allusers[this.myRoom].splice(index, 1);
       io.to(this.myRoom).emit("userjoined", allusers[this.myRoom]);
     }
   });
 });
 
-server.listen(port, (err)=>{
-  if(err){
+server.listen(port, (err) => {
+  if (err) {
     console.log(err);
     return false;
   }
